@@ -2,11 +2,11 @@
 
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<link rel="icon" href="Time symbol white.png">
-	<title>Discord Timestamp Generator</title>
-	<meta name="description" content="Generate a timestamp to paste into discord for events, and other stuff">
-	<style>
+    <meta charset="UTF-8" />
+	<link rel="icon" href="Time symbol white.png" />
+    <title>Discord Timestamp Generator</title>
+	<meta name="description" content="Generate a timestamp to paste into discord for events, and other stuff" />
+    <style>
 		body { 
 			height: 100vh;
 			display: flex;
@@ -19,7 +19,7 @@
 		}
 		.notify {
 			position: absolute;
-			top: -1cm;
+			top: -1.2cm;
 			left: 50%;
 			max-width: 170px;
 			border: 2px solid rgb(19, 135, 8);
@@ -30,12 +30,16 @@
 			color: lightgray;
 		}
 		main { 
-			max-width: 620px;
+			max-width: 80%;
 			border: lightgray 1px solid;
 			padding: 15px;
 			color: lightgray;
+			font-size: 1.2rem;
 		}
-		h1 { margin: 4px 0 }
+		h1 { 
+			margin: 4px 0;
+			font-size: 2.5rem;
+		}
 		input, button { 
 			margin: 0.5rem; 
 			border-radius: 10px;
@@ -63,7 +67,7 @@
 			height: 30px;
 			padding: 4px;
 		}
-		.preview { 
+		#preview { 
 			margin-top: 0.5rem;
 			font-style: italic; 
 		}
@@ -72,19 +76,15 @@
 			to { top: 1cm }
 		}
 		@keyframes slide-back {
-			from { top: 1cm } to { top: -1cm }
+			from { top: 1cm } to { top: -1.2cm }
 		}
-
-	    	@media only screen and (max-width: 450px) {
-			main { width: 80% }
-		}
-	</style>
+    </style>
 </head>
 <body>
 	<div class="notify">Copied to clipboard </div>
-	<main>
+	<main class="main">
 		<h1>Discord Timestamp Generator</h1>
-		<p>Current time: <span id="current-time"></span></p>
+		<p class="par">Current time: <span id="current-time"></span></p>
 		
 		<center>
 		<input type="number" id="hours" min="0" placeholder="Hours">
@@ -94,15 +94,15 @@
 		</center>
 		<p id="error"></p>
 		<div class="output" id="output" style="display:none;">
-			<p><strong>Unix Timestamp:</strong> <span id="timestamp"></span></p>
+			<p class="par"><strong>Unix Timestamp:</strong> <span id="timestamp"></span></p>
 			<hr />
-			<p>
+			<p class="par">
 			    <strong>Discord Tags:</strong><br>
-			    <code id="relative"></code> <button onclick="copy('relative')">Copy</button><br>
-			    <code id="full"></code> <button onclick="copy('full')">Copy</button>
+			    <code id="relative"></code> <button class="copy" onclick="copy('relative')">Copy</button><br>
+			    <code id="full"></code> <button class="copy" onclick="copy('full')">Copy</button>
 			</p>
 			<hr />
-			<p class="preview">Paste these into Discord — they’ll render in local time for everyone!</p>
+			<p class="par" id="preview">Paste these into Discord — they’ll render in local time for everyone!</p>
 		</div>
 	</main>
 	<script>
@@ -151,7 +151,33 @@
 				setTimeout(revert, 1400);
 			});
 		}
+
+		const main = document.querySelector(".main");
+		const pars = document.querySelectorAll(".par");
+		
+		const generateB = document.getElementById("generation");
+		const copys = document.querySelectorAll(".copy");
+		
+		if (screen.width <= 450) {
+			main.style.width = '80%';
+			pars.forEach((par) => par.style.fontSize = "1.5rem" );
+			errorMsg.style.fontSize = "1rem";
+			[ hoursInput, minutesInput ].forEach((element) => { 
+				element.style.width = '235px';
+				element.style.height = '45px';
+				element.style.fontSize = "1.5rem";
+			});
+			generateB.style.width = "100px";
+			generateB.style.height = "50px";
+			generateB.style.fontSize = "1.2rem";
+			copys.forEach((button) => {
+				button.style.width = "65px";
+				button.style.height = "45px";
+			});
+			notify.innerText = "Copied!";
+			notify.style.fontSize = '1.4rem';
+		}
+
 	</script>
 </body>
 </html>
-
