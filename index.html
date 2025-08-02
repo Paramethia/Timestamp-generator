@@ -2,11 +2,11 @@
 
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
 	<link rel="icon" href="Time symbol white.png">
-    <title>Discord Timestamp Generator</title>
+	<title>Discord Timestamp Generator</title>
 	<meta name="description" content="Generate a timestamp to paste into discord for events, and other stuff">
-    <style>
+	<style>
 		body { 
 			height: 100vh;
 			display: flex;
@@ -74,7 +74,11 @@
 		@keyframes slide-back {
 			from { top: 1cm } to { top: -1cm }
 		}
-    </style>
+
+	    	@media only screen and (max-width: 450px) {
+			main { width: 80% }
+		}
+	</style>
 </head>
 <body>
 	<div class="notify">Copied to clipboard </div>
@@ -150,3 +154,4 @@
 	</script>
 </body>
 </html>
+
