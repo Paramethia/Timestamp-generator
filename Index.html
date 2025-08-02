@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<link rel="icon" href="Time symbol white.png">
+    <title>Discord Timestamp Generator</title>
+	<meta name="description" content="Generate a timestamp to paste into discord for events, and other stuff">
+    <style>
+		body { 
+			height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0;
+			padding: 0;
+			background: #2f3136;
+			font-family: sans-serif;
+		}
+		.notify {
+			position: absolute;
+			top: -1cm;
+			left: 50%;
+			max-width: 170px;
+			border: 2px solid rgb(19, 135, 8);
+			border-radius: 25px;
+			background-color: rgba(19, 135, 8, 0.3);
+			padding: 7px;
+			text-align: center;
+			color: lightgray;
+		}
+		main { 
+			max-width: 620px;
+			border: lightgray 1px solid;
+			padding: 15px;
+			color: lightgray;
+		}
+		h1 { margin: 4px 0 }
+		input, button { 
+			margin: 0.5rem; 
+			border-radius: 10px;
+			padding: 0.5rem; 
+			font-size: 1rem; ;
+		}
+		button:hover { 
+			background-color: #7289da;
+			color: lightgray;
+			cursor: pointer
+		}
+		#generation { display: block }
+		#error {
+			font-size: 12px;
+			color: tomato;
+			font-weight: 600;
+		}
+		.output { 
+			margin-top: 1rem; 
+			font-family: monospace; 
+			background-color: #44484b; 
+			padding: 0.5rem;
+		}
+		.output button {
+			height: 30px;
+			padding: 4px;
+		}
+		.preview { 
+			margin-top: 0.5rem;
+			font-style: italic; 
+		}
+		
+		@keyframes slide {
+			to { top: 1cm }
+		}
+		@keyframes slide-back {
+			from { top: 1cm } to { top: -1cm }
+		}
+    </style>
+</head>
+<body>
+	<div class="notify">Copied to clipboard </div>
+	<main>
+		<h1>Discord Timestamp Generator</h1>
+		<p>Current time: <span id="current-time"></span></p>
+		
+		<center>
+		<input type="number" id="hours" min="0" placeholder="Hours">
+		<input type="number" id="minutes" min="0" placeholder="Minutes">
+		
+		<button id="generation" onclick="generate()">Generate</button>
+		</center>
+		<p id="error"></p>
+		<div class="output" id="output" style="display:none;">
+			<p><strong>Unix Timestamp:</strong> <span id="timestamp"></span></p>
+			<hr />
+			<p>
+			    <strong>Discord Tags:</strong><br>
+			    <code id="relative"></code> <button onclick="copy('relative')">Copy</button><br>
+			    <code id="full"></code> <button onclick="copy('full')">Copy</button>
+			</p>
+			<hr />
+			<p class="preview">Paste these into Discord — they’ll render in local time for everyone!</p>
+		</div>
+	</main>
+	<script>
+		const hoursInput = document.getElementById("hours");
+		const minutesInput = document.getElementById("minutes");
+		const notify = document.querySelector(".notify");
+		const errorMsg = document.getElementById("error");
+		
+		// Update the current time every second
+		
+		function updateCurrentTime() {
+			const now = new Date();
+			document.getElementById('current-time').textContent = now.toLocaleString();
+		}
+		setInterval(updateCurrentTime, 1000);
+		updateCurrentTime();
+		
+		[hoursInput, minutesInput].forEach((element) => {
+			element.onclick = () => { if (errorMsg.innerText) errorMsg.innerText = "" }
+		});
+
+		function generate() {
+			const hours = Number(hoursInput.value);
+			const minutes = Number(minutesInput.value);
+			
+			if (!hours && !minutes) {
+				errorMsg.innerText = "No minutes and/or hours entered";
+				return
+			}
+			
+			const totalSeconds = (hours * 3600) + (minutes * 60);
+			const futureTimestamp = Math.floor(Date.now() / 1000) + totalSeconds;
+
+			document.getElementById('timestamp').textContent = futureTimestamp;
+			document.getElementById('relative').textContent = `<t:${futureTimestamp}:R>`;
+			document.getElementById('full').textContent = `<t:${futureTimestamp}:F>`;
+			document.getElementById('output').style.display = 'block';
+		}
+		
+		function revert() { notify.style.animation = "slide-back 1s ease forwards" }
+
+		function copy(id) {
+			const text = document.getElementById(id).textContent;
+			navigator.clipboard.writeText(text).then(() => {
+				notify.style.animation = "slide 1s ease forwards";
+				setTimeout(revert, 1400);
+			});
+		}
+	</script>
+</body>
+</html>
